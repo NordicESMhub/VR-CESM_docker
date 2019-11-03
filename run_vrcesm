@@ -1,0 +1,5 @@
+./case.submit
+
+mkdir -p /home/cesm/archive/cases
+
+cp -R /home/cesm/cases/VR-CESM /home/cesm/archive/cases/.
