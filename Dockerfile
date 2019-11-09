@@ -12,7 +12,6 @@ LABEL autogen="no" \
       
 MAINTAINER Anne Fouilloux <annefou@geo.uio.no>
 
-##ENTRYPOINT ./run_b1850
 # By default en_US.UTF-8 is not generated, and locale-gen is not installed
 # (comes with locales)
 # and uncomment the en_US.UTF-8 line from /etc/locale.gen and regenerate
@@ -46,6 +45,7 @@ USER cesm
 
 RUN mkdir -p /home/cesm/.cime \
              /home/cesm/vr_cesm_config \
+             /home/cesm/svn_config \
              /home/cesm/work \
              /home/cesm/inputdata \
              /home/cesm/archive \

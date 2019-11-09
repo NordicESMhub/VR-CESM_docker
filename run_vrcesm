@@ -1,26 +1,31 @@
+# svn configuration
+
+tar xf /home/cesm/svn_config/subversion.tar
+
 # Specify number of processors per node
 
-export CESM_PES=30
+export CESM_PES=16
 
 sed -i -e "s/\$CESM_PES/$CESM_PES/g" /home/cesm/.cime/config_machines.xml 
 
 # Get VR-CESM code
 
-## clone cesm 2.2.beta03
+## clone cesm 2.2.beta01
 
-git clone -b cesm2_2_beta03 https://github.com/ESCOMP/CESM.git vr-cesm
+git clone -b cesm2_2_beta01 https://github.com/ESCOMP/CESM.git vr-cesm
 
 cd vr-cesm
+
+# Get all components
+
+./manage_externals/checkout_externals
 
 #####################
 # Fix ar problem
 sed -i.bak 's/# ARCHIVE COMMAND SIMILAR ACROSS ALL PLATFORMS/AR="$AR cq"/' ./cime/src/externals/mct/configure  
 
-# Fix svn certificate problem
-sed -i.bak "s/'checkout'/'checkout', '--trust-server-cert'/" ./manage_externals/manic/repository_svn.py
 #####################
 
-./manage_externals/checkout_externals
 
 ## copy vr-cesm specific files
 
