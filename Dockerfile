@@ -63,6 +63,5 @@ WORKDIR /home/cesm
 
 COPY run_vrcesm /home/cesm/
 
-CMD ["/bin/bash"]
+CMD ["/home/cesm/run_vrcesm"]
 
-#ENTRYPOINT ./run_vrcesm
