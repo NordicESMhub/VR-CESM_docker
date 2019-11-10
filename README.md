@@ -63,7 +63,7 @@ drwxrwxr-x.  8 centos users        4096 Nov  9 15:21 archive
 ### Pull and run images
 
 ```
-docker pull nordicesmhub/cesm_hc6l5:latest
+docker pull nordicesmhub/cesm_vr:latest
 docker run -i -v /opt/uio/inputdata:/home/cesm/inputdata -v /opt/uio/archive:/home/cesm/archive \
               -v /opt/uio/svn_config:/home/cesm/svn_config -tnordicesmhub/cesm_vr:latest
 ```
