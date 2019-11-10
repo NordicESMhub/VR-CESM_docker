@@ -41,6 +41,27 @@ Make sure inputdata is available (it won't download it as we suppose it is alrea
 - The folder `vr_cesm_config/` contains the changes required for running our Variable resolution grid (made by Colin M. Zarzycki)
 - Model outputs are stored in `/opt/uio/archive` along with the `case` folder (it can be interesting to check timing).
 
+**Important**: the folder /opt/uio/archive needs to be writable by unix group `users` (see Dockerfile) otherwise you will get a permission denied when running.
+
+```
+sudo chgrp -R users /opt/uio/archive
+sudo chmod -R g+w /opt/uio/archive
+```
+
+You can check it:
+
+```
+ls -lrt /opt/uio | grep archive
+```
+
+You should have:
+
+```
+drwxrwxr-x.  8 centos users        4096 Nov  9 15:21 archive
+```
+
+### Pull and run images
+
 ```
 docker pull nordicesmhub/cesm_hc6l5:latest
 docker run -i -v /opt/uio/inputdata:/home/cesm/inputdata -v /opt/uio/archive:/home/cesm/archive \
