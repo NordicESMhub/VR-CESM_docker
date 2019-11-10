@@ -21,7 +21,13 @@ CESM docker container for HIST_CAM60_CLM50%BGC_CICE%PRES_DOCN%DOM_MOSART_CISM2%N
 svn co https://svn-ccsm-models.cgd.ucar.edu/cam1/trunk_tags/cam6_1_014/components/cam
 ```
 
-Enter the correct username and password. Then create the corresponding tarbal:
+**Remark**: you may have to install subversion on your virtual machine:
+
+```
+sudo yum install subversion -y
+```
+
+Enter the correct username and password. Then create the corresponding tarball:
 
 ```
 cd $HOME
