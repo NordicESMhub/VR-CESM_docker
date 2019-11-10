@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # svn configuration
 
 tar xf /home/cesm/svn_config/subversion.tar
