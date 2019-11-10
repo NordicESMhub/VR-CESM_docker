@@ -34,17 +34,17 @@ sed -i.bak 's/# ARCHIVE COMMAND SIMILAR ACROSS ALL PLATFORMS/AR="$AR cq"/' ./cim
 export CESM_HOME=/home/cesm/vr-cesm
 
 cp /home/cesm/vr_cesm_config/config_grids_common.xml       \
-   $CESM_HOME/cime/config/cesm/config_grids_common.xml
+   $CESM_HOME/cime/config/cesm/.
 cp /home/cesm/vr_cesm_config/config_grids.xml              \
-   $CESM_HOME/cime/config/cesm/config_grids.xml
+   $CESM_HOME/cime/config/cesm/.
 cp /home/cesm/vr_cesm_config/horiz_grid.xml                \
-   $CESM_HOME/components/cam/bld/config_files/horiz_grid.xml
-cp /home/cesm/vr_cesm_config/namelist_defaults_cam.xml     \ 
-   $CESM_HOME/components/cam/bld/namelist_files/namelist_defaults_cam.xml
+   $CESM_HOME/components/cam/bld/config_files/.
+cp /home/cesm/vr_cesm_config/namelist_defaults_cam.xml     \
+   $CESM_HOME/components/cam/bld/namelist_files/.
 cp /home/cesm/vr_cesm_config/namelist_defaults_ctsm.xml    \
-   $CESM_HOME/components/clm/bld/namelist_files/namelist_defaults_ctsm.xml
+   $CESM_HOME/components/clm/bld/namelist_files/.
 cp /home/cesm/vr_cesm_config/namelist_definition_ctsm.xml  \
-   $CESM_HOME/components/clm/bld/namelist_files/namelist_definition_ctsm.xml
+   $CESM_HOME/components/clm/bld/namelist_files/.
 
 # Create new case
 
