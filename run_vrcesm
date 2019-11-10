@@ -6,7 +6,7 @@ tar xf /home/cesm/svn_config/subversion.tar
 
 # Specify number of processors per node
 
-export CESM_PES=16
+export CESM_PES=8
 
 sed -i -e "s/\$CESM_PES/$CESM_PES/g" /home/cesm/.cime/config_machines.xml 
 
