@@ -65,7 +65,7 @@ drwxrwxr-x.  8 centos users        4096 Nov  9 15:21 archive
 ```
 docker pull nordicesmhub/cesm_vr:latest
 docker run -i -v /opt/uio/inputdata:/home/cesm/inputdata -v /opt/uio/archive:/home/cesm/archive \
-              -v /opt/uio/svn_config:/home/cesm/svn_config -tnordicesmhub/cesm_vr:latest
+              -v /opt/uio/svn_config:/home/cesm/svn_config -t nordicesmhub/cesm_vr:latest
 ```
 
 - We are running 1 day (144 timestep of 30mn) using 8 processors. It takes about 13GB per processors.
