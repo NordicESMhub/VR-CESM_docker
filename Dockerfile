@@ -1,4 +1,4 @@
-FROM bitnami/minideb:jessie
+FROM quay.io/nordicesmhub/cesm_libs:latest
 
 #####EXTRA LABELS#####
 LABEL autogen="no" \ 
@@ -6,62 +6,69 @@ LABEL autogen="no" \
     version="2" \
     software.version="2.1.1" \ 
     about.summary="Community Earth System Model" \ 
-    base_image="cesm:2.1.1--py37he9b5208_1" \
+    base_image="quay.io/nordicesmhub/cesm_libs" \
     about.home="VR-CESM" \
     about.license="Copyright (c) 2017, University Corporation for Atmospheric Research (UCAR). All rights reserved." 
       
 MAINTAINER Anne Fouilloux <annefou@geo.uio.no>
 
-# By default en_US.UTF-8 is not generated, and locale-gen is not installed
-# (comes with locales)
-# and uncomment the en_US.UTF-8 line from /etc/locale.gen and regenerate
-# AF: added svn, csh and wget for CESM B1850 configuration (with ocean)
-RUN install_packages libgl1-mesa-glx locales openssh-client procps \
-    csh wget bzip2 ca-certificates curl git subversion && \
-    sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen && locale-gen
+ENV USER=root
+ENV HOME=/root
 
-ENV LC_ALL=en_US.UTF-8 \
-    LANG=en_US.UTF-8
+RUN mkdir -p $HOME/.cime \
+             $HOME/work \
+             $HOME/inputdata \
+             $HOME/archive \
+             $HOME/cases 
 
-# Install miniconda
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
-    /bin/bash ~/miniconda.sh -b -u -p /usr/local && \
-    rm ~/miniconda.sh && \
-    /usr/local/bin/conda config --add channels defaults && \
-    /usr/local/bin/conda config --add channels bioconda && \ 
-    /usr/local/bin/conda config --add channels conda-forge && \
-    /usr/local/bin/conda install cesm && \
-    /usr/local/bin/conda clean -tipsy && \
-    ln -s /usr/local/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    echo ". /usr/local/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate base" >> ~/.bashrc
+COPY subversion.tar $HOME/
+COPY config_files/* $HOME/.cime/
+COPY vr_cesm_config/*  $HOME/vr_cesm_config/
+COPY local_nl_clm $HOME/
+COPY local_nl_cam $HOME/
 
-RUN ln -s /usr/local/bin/x86_64-conda_cos6-linux-gnu-ar /usr/local/bin/ar
+RUN cd $HOME \
+    && tar xf subversion.tar \
+    && git clone -b cesm2_2_beta01 https://github.com/ESCOMP/CESM.git \
+    && cd CESM \
+    && sed -i.bak "s/'checkout'/'checkout', '--trust-server-cert', '--non-interactive'/" ./manage_externals/manic/repository_svn.py \
+    && ./manage_externals/checkout_externals
 
+ENV CESM_PES=18
+RUN sed -i -e "s/\$CESM_PES/$CESM_PES/g" $HOME/.cime/config_machines.xml \
+    && cd $HOME/CESM/cime/scripts \
+    && cp $HOME/vr_cesm_config/config_grids_common.xml       \
+       $HOME/CESM/cime/config/cesm/ \
+    && cp $HOME/vr_cesm_config/config_grids.xml              \
+       $HOME/CESM/cime/config/cesm/ \
+    && cp $HOME/vr_cesm_config/horiz_grid.xml                \
+       $HOME/CESM/components/cam/bld/config_files/ \
+    && cp $HOME/vr_cesm_config/namelist_defaults_cam.xml     \
+       $HOME/CESM/components/cam/bld/namelist_files/ \
+    && cp $HOME/vr_cesm_config/namelist_defaults_ctsm.xml    \
+       $HOME/CESM/components/clm/bld/namelist_files/ \
+    && cp $HOME/vr_cesm_config/namelist_definition_ctsm.xml  \
+       $HOME/CESM/components/clm/bld/namelist_files/
 
-RUN adduser cesm --disabled-password && usermod -aG users cesm
+RUN CASE=case1 && \
+    cd $HOME/CESM/cime/scripts && \
+    ./create_newcase --case $HOME/cases/vr-cesm \
+    --compset HIST_CAM60_CLM50%BGC_CICE%PRES_DOCN%DOM_MOSART_CISM2%NOEVOLVE_SWAV \
+    --res ne0uoslone30x8_ne0uoslone30x8_mt12 --machine espresso \
+    --run-unsupported  && \
+    cd $HOME/cases/vr-cesm && \                       
+    ./case.setup && \
+    ./xmlchange EPS_AAREA=0.001 && \
+    ./xmlchange ATM_NCPL=144 && \
+    cat $HOME/local_nl_cam >> user_nl_cam  && \
+    cat $HOME/local_nl_clm >> user_nl_clm && \
+    ./xmlchange STOP_N=1 && \
+    ./xmlchange STOP_OPTION=ndays && \
+    ./case.build 
 
-USER cesm
+COPY run_vrcesm $HOME/
 
-RUN mkdir -p /home/cesm/.cime \
-             /home/cesm/vr_cesm_config \
-             /home/cesm/svn_config \
-             /home/cesm/work \
-             /home/cesm/inputdata \
-             /home/cesm/archive \
-             /home/cesm/cases 
+WORKDIR $HOME/cases
 
-COPY config_files/* /home/cesm/.cime/
-
-COPY vr_cesm_config/*  /home/cesm/vr_cesm_config/
-
-ENV AR=ar
-
-ENV USER=cesm
-
-WORKDIR /home/cesm
-
-COPY run_vrcesm /home/cesm/
-
-CMD ["/home/cesm/run_vrcesm"]
+CMD ["/bin/bash"]
 

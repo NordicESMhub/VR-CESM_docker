@@ -4,14 +4,14 @@
 
   <compiler COMPILER="gnu" MACH="espresso">
     <LD>mpifort</LD>
-    <AR>x86_64-conda_cos6-linux-gnu-ar</AR>
-    <SFC>x86_64-conda_cos6-linux-gnu-gfortran</SFC>
-    <SCC>x86_64-conda_cos6-linux-gnu-cc</SCC>
-    <SCXX>x86_64-conda_cos6-linux-gnu-c++</SCXX>
+    <AR>ar</AR>
+    <SFC>gfortran</SFC>
+    <SCC>cc</SCC>
+    <SCXX>c++</SCXX>
     <MPIFC>mpifort</MPIFC>
     <MPICC>mpicc</MPICC>
     <MPICXX>mpicxx</MPICXX>
-    <NETCDF_PATH>/usr/local</NETCDF_PATH>
+    <NETCDF_PATH>/usr</NETCDF_PATH>
     <FFLAGS>
       <append DEBUG="FALSE"> -O2 </append>
       <append MODEL="micom"> -fdefault-real-8 </append>
@@ -19,7 +19,7 @@
     </FFLAGS>
     <SLIBS>
       <append> -L$(NETCDF_PATH)/lib -lnetcdff -lnetcdf -ldl </append>
-      <append> -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_core -lgomp -lpthread -lm -fopenmp </append>
+      <append> -lblas -llapack -lgomp -lpthread -lm -fopenmp </append>
     </SLIBS>
   </compiler>
 </config_compilers>

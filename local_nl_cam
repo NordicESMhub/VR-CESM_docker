@@ -1,0 +1,15 @@
+se_nu_top=1e5
+se_nu=8e-8
+se_nu_div=15.8e-8
+se_nu_p=8e-8
+se_hypervis_scaling=3.2
+se_hypervis_power=0
+se_hypervis_subcycle=6
+se_nsplit=6
+se_hypervis_on_plevs=.false.
+use_gw_rdg_beta=.false.
+use_gw_oro=.true.
+cld_macmic_num_steps=1
+
+nhtfrq(1) = -24
+
