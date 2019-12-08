@@ -34,7 +34,8 @@ RUN cd $HOME \
     && sed -i.bak "s/'checkout'/'checkout', '--trust-server-cert', '--non-interactive'/" ./manage_externals/manic/repository_svn.py \
     && ./manage_externals/checkout_externals
 
-ENV CESM_PES=18
+ENV CESM_PES=12
+
 RUN sed -i -e "s/\$CESM_PES/$CESM_PES/g" $HOME/.cime/config_machines.xml \
     && cd $HOME/CESM/cime/scripts \
     && cp $HOME/vr_cesm_config/config_grids_common.xml       \
@@ -52,11 +53,91 @@ RUN sed -i -e "s/\$CESM_PES/$CESM_PES/g" $HOME/.cime/config_machines.xml \
 
 RUN CASE=case1 && \
     cd $HOME/CESM/cime/scripts && \
-    ./create_newcase --case $HOME/cases/vr-cesm \
+    ./create_newcase --case $HOME/cases/vr-cesm$CASE \
     --compset HIST_CAM60_CLM50%BGC_CICE%PRES_DOCN%DOM_MOSART_CISM2%NOEVOLVE_SWAV \
     --res ne0uoslone30x8_ne0uoslone30x8_mt12 --machine espresso \
     --run-unsupported  && \
-    cd $HOME/cases/vr-cesm && \                       
+    cd $HOME/cases/vr-cesm$CASE && \                       
+    ./case.setup && \
+    ./xmlchange EPS_AAREA=0.001 && \
+    ./xmlchange ATM_NCPL=144 && \
+    cat $HOME/local_nl_cam >> user_nl_cam  && \
+    cat $HOME/local_nl_clm >> user_nl_clm && \
+    ./xmlchange STOP_N=1 && \
+    ./xmlchange STOP_OPTION=ndays && \
+    ./case.build 
+
+RUN CASE=case2 && \
+    cd $HOME/CESM/cime/scripts && \
+    ./create_newcase --case $HOME/cases/vr-cesm$CASE \
+    --compset HIST_CAM60_CLM50%BGC_CICE%PRES_DOCN%DOM_MOSART_CISM2%NOEVOLVE_SWAV \
+    --res ne0uoslone30x8_ne0uoslone30x8_mt12 --machine espresso \
+    --run-unsupported  && \
+    cd $HOME/cases/vr-cesm$CASE && \                       
+    NUMNODES="$((4*$CESM_PES))"                                   && \
+    ./xmlchange --file env_mach_pes.xml --id NTASKS --val ${NUMNODES} && \
+    ./xmlchange --file env_mach_pes.xml --id NTASKS_ESP --val 1 && \
+    ./xmlchange --file env_mach_pes.xml --id ROOTPE --val 0 && \
+    ./case.setup && \
+    ./xmlchange EPS_AAREA=0.001 && \
+    ./xmlchange ATM_NCPL=144 && \
+    cat $HOME/local_nl_cam >> user_nl_cam  && \
+    cat $HOME/local_nl_clm >> user_nl_clm && \
+    ./xmlchange STOP_N=1 && \
+    ./xmlchange STOP_OPTION=ndays && \
+    ./case.build 
+
+RUN CASE=case3 && \
+    cd $HOME/CESM/cime/scripts && \
+    ./create_newcase --case $HOME/cases/vr-cesm$CASE \
+    --compset HIST_CAM60_CLM50%BGC_CICE%PRES_DOCN%DOM_MOSART_CISM2%NOEVOLVE_SWAV \
+    --res ne0uoslone30x8_ne0uoslone30x8_mt12 --machine espresso \
+    --run-unsupported  && \
+    cd $HOME/cases/vr-cesm$CASE && \                       
+    NUMNODES="$((8*$CESM_PES))"                                   && \
+    ./xmlchange --file env_mach_pes.xml --id NTASKS --val ${NUMNODES} && \
+    ./xmlchange --file env_mach_pes.xml --id NTASKS_ESP --val 1 && \
+    ./xmlchange --file env_mach_pes.xml --id ROOTPE --val 0 && \
+    ./case.setup && \
+    ./xmlchange EPS_AAREA=0.001 && \
+    ./xmlchange ATM_NCPL=144 && \
+    cat $HOME/local_nl_cam >> user_nl_cam  && \
+    cat $HOME/local_nl_clm >> user_nl_clm && \
+    ./xmlchange STOP_N=1 && \
+    ./xmlchange STOP_OPTION=ndays && \
+    ./case.build 
+
+RUN CASE=case4 && \
+    cd $HOME/CESM/cime/scripts && \
+    ./create_newcase --case $HOME/cases/vr-cesm$CASE \
+    --compset HIST_CAM60_CLM50%BGC_CICE%PRES_DOCN%DOM_MOSART_CISM2%NOEVOLVE_SWAV \
+    --res ne0uoslone30x8_ne0uoslone30x8_mt12 --machine espresso \
+    --run-unsupported  && \
+    cd $HOME/cases/vr-cesm$CASE && \                       
+    NUMNODES="$((16*$CESM_PES))"                                   && \
+    ./xmlchange --file env_mach_pes.xml --id NTASKS --val ${NUMNODES} && \
+    ./xmlchange --file env_mach_pes.xml --id NTASKS_ESP --val 1 && \
+    ./xmlchange --file env_mach_pes.xml --id ROOTPE --val 0 && \
+    ./case.setup && \
+    ./xmlchange EPS_AAREA=0.001 && \
+    ./xmlchange ATM_NCPL=144 && \
+    cat $HOME/local_nl_cam >> user_nl_cam  && \
+    cat $HOME/local_nl_clm >> user_nl_clm && \
+    ./xmlchange STOP_N=1 && \
+    ./xmlchange STOP_OPTION=ndays && \
+    ./case.build 
+
+RUN CASE=case5 && \
+    cd $HOME/CESM/cime/scripts && \
+    ./create_newcase --case $HOME/cases/vr-cesm$CASE \
+    --compset HIST_CAM60_CLM50%BGC_CICE%PRES_DOCN%DOM_MOSART_CISM2%NOEVOLVE_SWAV \
+    --res ne0uoslone30x8_ne0uoslone30x8_mt12 --machine espresso \
+    --run-unsupported  && \
+    cd $HOME/cases/vr-cesm$CASE && \                       
+    NUMNODES="$((42*$CESM_PES))"                                   && \
+    ./xmlchange --file env_mach_pes.xml --id NTASKS --val ${NUMNODES} && \
+    ./xmlchange --file env_mach_pes.xml --id NTASKS_ESP --val 1 && \
+    ./xmlchange --file env_mach_pes.xml --id ROOTPE --val 0 && \
     ./case.setup && \
     ./xmlchange EPS_AAREA=0.001 && \
     ./xmlchange ATM_NCPL=144 && \
