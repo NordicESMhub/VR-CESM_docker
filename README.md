@@ -17,6 +17,10 @@ CESM docker container for HIST_CAM60_CLM50%BGC_CICE%PRES_DOCN%DOM_MOSART_CISM2%N
 
 - The CESM version used is cesm2_2_beta01 that can only be accessible if you authenticate yourself properly. We pass a tarball containing .subversion folder which we used to authenticate ourselves.
 
+First you need to instal subversion:
+
+sudo yum install subversion -y
+
 ```
 svn co https://svn-ccsm-models.cgd.ucar.edu/cam1/trunk_tags/cam6_1_014/components/cam
 ```
