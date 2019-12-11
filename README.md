@@ -41,7 +41,7 @@ We then save it in a folder that we pass when running the docker container:
 
 ```
 mkdir -p /opt/uio/svn_config
-mv subversion.tar svn_config/
+mv subversion.tar /opt/uio/svn_config/
 ```
 
 ### VR-CESM docker
