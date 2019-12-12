@@ -1,5 +1,7 @@
 # VR-CESM_docker
 
+Citation: [![DOI](https://zenodo.org/badge/219340247.svg)](https://zenodo.org/badge/latestdoi/219340247)
+
 docker container for VR-CESM docker container
 
 VR-CESM historic with CAM6 and CLM5 (no ocean) using cesm2_2_beta01.
